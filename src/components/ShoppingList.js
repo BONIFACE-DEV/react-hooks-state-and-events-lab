@@ -1,25 +1,27 @@
-import React from "react";
+
+
+import React, { useState } from "react";
 import Item from "./Item";
-import { useState } from "react";
 
 function ShoppingList({ items }) {
-  const[filterterm, setFilterTerm] = useState("All");
-  function filterCategory(event){
-    setFilterTerm(event.target.value)
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  function handleCategoryChange(event) {
+    // event.target.value will be the value selected by the user
+    setSelectedCategory(event.target.value);
   }
-  const displayItems = items.filter((item)=>{
-    if (filterterm === "All"){
-      return true
-    }
-    else{
-      return item.category === filterterm
-    }
-  })
-  console.log(filterterm)
+
+  // we want to filter the items to only display the ones based on the selected category
+  const itemsToDisplay = items.filter((item) => {
+    if (selectedCategory === "All") return true;
+
+    return item.category === selectedCategory;
+  });
+
   return (
     <div className="ShoppingList">
       <div className="Filter">
-        <select name="filter" onChange={filterCategory}>
+        <select name="filter" onChange={handleCategoryChange}>
           <option value="All">Filter by category</option>
           <option value="Produce">Produce</option>
           <option value="Dairy">Dairy</option>
@@ -27,7 +29,7 @@ function ShoppingList({ items }) {
         </select>
       </div>
       <ul className="Items">
-        {items.map((item) => (
+        {itemsToDisplay.map((item) => (
           <Item key={item.id} name={item.name} category={item.category} />
         ))}
       </ul>
